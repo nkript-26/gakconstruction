@@ -2,13 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class HeroBanner extends Model
 {
-    protected $fillable = ['title', 'subtitle', 'image', 'is_active', 'order'];
+    use HasFactory;
 
-    protected $casts = [
-        'is_active' => 'boolean',
+    protected $fillable = [
+        'title',
+        'subtitle',
+        'page_url',
+        'image',
+        'order',
+        'is_active',
     ];
 }
