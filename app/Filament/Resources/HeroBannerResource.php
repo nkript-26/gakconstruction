@@ -4,26 +4,35 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\HeroBannerResource\Pages;
 use App\Models\HeroBanner;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class HeroBannerResource extends Resource
 {
     protected static ?string $model = HeroBanner::class;
-    protected static ?string $navigationIcon = 'heroicon-o-photo';
-    protected static \UnitEnum|string|null $navigationGroup = 'Website Content';
+
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-photo';
+
+    protected static \UnitEnum | string | null $navigationGroup = 'Website Content';
+
     protected static ?int $navigationSort = 1;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
-                Forms\Components\Section::make('Hero Banner Details')
+                Section::make('Hero Banner Details')
                     ->schema([
-                        Forms\Components\Select::make('page_url')
+                        Select::make('page_url')
                             ->label('Target Page / Path')
                             ->options([
                                 '/' => 'Home Page (/)',
@@ -36,29 +45,31 @@ class HeroBannerResource extends Resource
                             ->required()
                             ->columnSpanFull(),
 
-                        Forms\Components\TextInput::make('title')
+                        TextInput::make('title')
                             ->required()
                             ->maxLength(255),
 
-                        Forms\Components\TextInput::make('order')
+                        TextInput::make('order')
                             ->numeric()
                             ->default(0),
 
-                        Forms\Components\Textarea::make('subtitle')
+                        Textarea::make('subtitle')
                             ->rows(3)
                             ->columnSpanFull(),
 
-                        Forms\Components\FileUpload::make('image')
-                            ->image()
-                            ->required()
-                            ->directory('hero-banners')
-                            ->imageEditor()
-                            ->columnSpanFull(),
+                        FileUpload::make('image')
+    ->image()
+    ->required()
+    ->disk('public')
+    ->directory('hero-banners')
+    ->imageEditor()
+    ->columnSpanFull(),
 
-                        Forms\Components\Toggle::make('is_active')
+                        Toggle::make('is_active')
                             ->default(true)
                             ->label('Active'),
-                    ])->columns(2),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -101,12 +112,12 @@ class HeroBannerResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
